@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
 
+env:
+  BUILD_TYPE: Debug
+
 jobs:
   test:
     name: Windows Tests
@@ -35,18 +38,24 @@ jobs:
         with:
           vcpkgDirectory: ${{ github.workspace }}/vcpkg
 
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
       - name: Configure CMake
         run: >
-          cmake -S "${{ github.workspace }}"
-          -B "${{ github.workspace }}/build"
-          -G "Visual Studio 17 2022"
+          cmake -B "${{ steps.strings.outputs.build-output-dir }}"
           -A x64
           -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
           -DBUILD_TESTING=ON
           -DDTA_BUILD_PYTHON_BINDINGS=ON
+          -S "${{ github.workspace }}"
 
-      - name: Build tests
-        run: cmake --build "${{ github.workspace }}/build" --config Debug
+      - name: Build
+        run: cmake --build "${{ steps.strings.outputs.build-output-dir }}" --config ${{ env.BUILD_TYPE }}
 
-      - name: Run tests
-        run: ctest --test-dir "${{ github.workspace }}/build" -C Debug --output-on-failure
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config ${{ env.BUILD_TYPE }} --output-on-failure
