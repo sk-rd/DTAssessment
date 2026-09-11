@@ -36,3 +36,13 @@ cmake --preset default
 cmake --build --preset default
 ctest --preset default
 ```
+
+默认会构建 Boost.Python 模块。构建完成后，可以将生成目录加入
+`PYTHONPATH`，然后从 Python 调用接口：
+
+```bash
+export PYTHONPATH="$PWD/build:$PYTHONPATH"
+python3 -c "import dta; print(dta.add(2, 3))"
+```
+
+如不需要 Python 接口，可以通过 `-DDTA_BUILD_PYTHON_BINDINGS=OFF` 关闭。
