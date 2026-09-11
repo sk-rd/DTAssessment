@@ -68,3 +68,6 @@ Testing/
 .cache/
 
 .vs
+.vscode
+test
+CMakeUserPresets.json
