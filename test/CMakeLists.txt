@@ -1,9 +1,12 @@
+find_package(Boost CONFIG REQUIRED COMPONENTS unit_test_framework)
+
 add_executable(dta_tests
     test_dta.cpp
 )
 
 target_link_libraries(dta_tests
     PRIVATE
+        Boost::unit_test_framework
         dta
 )
 
