@@ -4,6 +4,9 @@ project(dta VERSION 0.1.0 LANGUAGES CXX)
 
 option(DTA_BUILD_DOCS "Build API documentation with Doxygen" OFF)
 option(DTA_BUILD_PYTHON_BINDINGS "Build Python bindings with Boost.Python" ON)
+option(DTA_BUILD_CLI "Build the JSON assessment command-line application" ON)
+
+include(CTest)
 
 add_library(dta INTERFACE)
 
@@ -16,6 +19,16 @@ target_include_directories(dta
 )
 
 target_compile_features(dta INTERFACE cxx_std_17)
+
+if(DTA_BUILD_CLI OR DTA_BUILD_PYTHON_BINDINGS OR BUILD_TESTING)
+    find_package(nlohmann_json CONFIG REQUIRED)
+endif()
+
+if(DTA_BUILD_CLI)
+    add_executable(dta_assess src/main.cpp)
+    target_link_libraries(dta_assess PRIVATE dta nlohmann_json::nlohmann_json)
+    install(TARGETS dta_assess RUNTIME DESTINATION bin)
+endif()
 
 if(DTA_BUILD_PYTHON_BINDINGS)
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
@@ -30,6 +43,7 @@ if(DTA_BUILD_PYTHON_BINDINGS)
             dta
             Boost::python
             Python3::Python
+            nlohmann_json::nlohmann_json
     )
 
     set_target_properties(dta_python PROPERTIES
@@ -42,7 +56,6 @@ if(DTA_BUILD_PYTHON_BINDINGS)
     endif()
 endif()
 
-include(CTest)
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()

@@ -2,7 +2,8 @@
   "name": "dta",
   "version-string": "0.1.0",
   "dependencies": [
+    "boost-python",
     "boost-test",
-    "boost-python"
+    "nlohmann-json"
   ]
 }

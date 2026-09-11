@@ -35,6 +35,7 @@ jobs:
           -G Ninja
           -DBUILD_TESTING=OFF
           -DDTA_BUILD_PYTHON_BINDINGS=OFF
+          -DDTA_BUILD_CLI=OFF
           -DDTA_BUILD_DOCS=ON
 
       - name: Build documentation

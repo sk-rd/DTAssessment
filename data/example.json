@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "units": {"length": "m", "stress": "MPa"},
+  "simulation": {
+    "trials": 100,
+    "max_cycles": 3000,
+    "history_interval": 100,
+    "seed": 2026
+  },
+  "material": {
+    "paris_c": 4e-9,
+    "paris_m": 3.0,
+    "toughness": 35.0,
+    "threshold": 1.5,
+    "walker_gamma": 0.5
+  },
+  "spectrum": [
+    {"maximum": 95.0, "minimum": 9.5, "cycles": 99},
+    {"maximum": 160.0, "minimum": 16.0, "cycles": 1}
+  ],
+  "fleet": {
+    "id": "demo-fleet",
+    "airplanes": [
+      {
+        "id": "airplane-001",
+        "major_components": [
+          {
+            "id": "wing",
+            "med_min_failed_components": 2,
+            "components": [
+              {
+                "id": "panel-left",
+                "msd_min_failed_details": 2,
+                "critical_details": [
+                  {
+                    "id": "site-1",
+                    "geometry": "edge_crack",
+                    "width": 0.1,
+                    "initial_crack": {"distribution": "weibull", "shape": 2.0, "scale": 0.0005}
+                  },
+                  {
+                    "id": "site-2",
+                    "geometry": "edge_crack",
+                    "width": 0.1,
+                    "initial_crack": {"distribution": "weibull", "shape": 2.0, "scale": 0.0005}
+                  }
+                ]
+              },
+              {
+                "id": "panel-right",
+                "msd_min_failed_details": 2,
+                "critical_details": [
+                  {
+                    "id": "site-1",
+                    "geometry": "center_crack",
+                    "width": 0.1,
+                    "initial_crack": {"distribution": "weibull", "shape": 2.0, "scale": 0.0007}
+                  },
+                  {
+                    "id": "site-2",
+                    "geometry": "center_crack",
+                    "width": 0.1,
+                    "initial_crack": {"distribution": "weibull", "shape": 2.0, "scale": 0.0007}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
