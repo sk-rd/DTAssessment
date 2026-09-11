@@ -23,9 +23,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Ninja
-        run: choco install ninja
-
       - name: Install vcpkg dependencies
         uses: lukka/run-vcpkg@v11
         with:
