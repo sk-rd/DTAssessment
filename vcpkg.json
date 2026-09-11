@@ -2,6 +2,7 @@
   "name": "dta",
   "version-string": "0.1.0",
   "dependencies": [
-    "boost-test"
+    "boost-test",
+    "boost-python"
   ]
 }
