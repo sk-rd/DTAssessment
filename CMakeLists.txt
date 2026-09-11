@@ -2,21 +2,19 @@ cmake_minimum_required(VERSION 3.20)
 
 project(dta VERSION 0.1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+option(DTA_BUILD_DOCS "Build API documentation with Doxygen" OFF)
 
-add_library(dta
-    src/dta.cpp
-)
+add_library(dta INTERFACE)
 
 add_library(dta::dta ALIAS dta)
 
 target_include_directories(dta
-    PUBLIC
+    INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
+
+target_compile_features(dta INTERFACE cxx_std_17)
 
 include(CTest)
 if(BUILD_TESTING)
@@ -24,11 +22,13 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
+if(DTA_BUILD_DOCS)
+    add_subdirectory(doc)
+endif()
+
 install(TARGETS dta
     EXPORT dtaTargets
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
 )
 
 install(DIRECTORY include/ DESTINATION include)
