@@ -12,6 +12,7 @@
 ## 依赖管理
 
 项目使用 vcpkg manifest 模式，依赖定义在 `vcpkg.json` 中。
+测试使用 Boost.Test。
 
 ## 文档
 

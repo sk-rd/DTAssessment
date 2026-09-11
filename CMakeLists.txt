@@ -18,7 +18,6 @@ target_compile_features(dta INTERFACE cxx_std_17)
 
 include(CTest)
 if(BUILD_TESTING)
-    find_package(GTest CONFIG REQUIRED)
     add_subdirectory(test)
 endif()
 

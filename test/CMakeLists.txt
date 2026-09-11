@@ -5,8 +5,6 @@ add_executable(dta_tests
 target_link_libraries(dta_tests
     PRIVATE
         dta
-        GTest::gtest_main
 )
 
-include(GoogleTest)
-gtest_discover_tests(dta_tests)
+add_test(NAME dta_tests COMMAND dta_tests)
