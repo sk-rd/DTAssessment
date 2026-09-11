@@ -1,0 +1,11 @@
+PROJECT_NAME           = "dta"
+PROJECT_NUMBER         = "@PROJECT_VERSION@"
+OUTPUT_DIRECTORY       = "@DTA_DOXYGEN_OUTPUT_DIR@"
+GENERATE_LATEX         = NO
+RECURSIVE              = YES
+QUIET                  = YES
+JAVADOC_AUTOBRIEF      = YES
+HAVE_DOT               = NO
+INPUT                  = "@DTA_DOXYGEN_INPUT_DIR@" "@CMAKE_SOURCE_DIR@/README.md"
+FILE_PATTERNS          = *.hpp
+USE_MDFILE_AS_MAINPAGE = "@CMAKE_SOURCE_DIR@/README.md"
