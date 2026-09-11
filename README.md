@@ -1,4 +1,4 @@
-# dta
+# DTA
 
 一个使用 CMake 和 vcpkg 的基础 C++ 项目模板，参考 Boost 风格组织头文件，包含 `doc`、`include`、`src`、`test` 目录。
 
