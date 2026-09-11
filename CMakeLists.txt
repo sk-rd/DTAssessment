@@ -36,6 +36,10 @@ if(DTA_BUILD_PYTHON_BINDINGS)
         PREFIX ""
         OUTPUT_NAME dta
     )
+
+    if(WIN32)
+        set_target_properties(dta_python PROPERTIES SUFFIX ".pyd")
+    endif()
 endif()
 
 include(CTest)
