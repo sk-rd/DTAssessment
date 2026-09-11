@@ -13,15 +13,17 @@ permissions:
 
 jobs:
   test:
+    name: Windows Tests
     runs-on: windows-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Set up MSVC developer command prompt
         uses: ilammy/msvc-dev-cmd@v1
@@ -33,19 +35,18 @@ jobs:
         with:
           vcpkgDirectory: ${{ github.workspace }}/vcpkg
 
-      - name: Configure
+      - name: Configure CMake
         run: >
           cmake -S "${{ github.workspace }}"
           -B "${{ github.workspace }}/build"
           -G "Visual Studio 17 2022"
           -A x64
-          -DCMAKE_BUILD_TYPE=Debug
           -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
           -DBUILD_TESTING=ON
           -DDTA_BUILD_PYTHON_BINDINGS=ON
 
-      - name: Build
+      - name: Build tests
         run: cmake --build "${{ github.workspace }}/build" --config Debug
 
-      - name: Test
+      - name: Run tests
         run: ctest --test-dir "${{ github.workspace }}/build" -C Debug --output-on-failure
