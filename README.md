@@ -22,6 +22,10 @@ cmake --preset default -DDTA_BUILD_DOCS=ON
 cmake --build --preset default --target dta_docs
 ```
 
+仓库已包含 GitHub Actions 工作流 `/home/runner/work/DTAssessment/DTAssessment/.github/workflows/docs-pages.yml`，会在 `main`/`master` 分支推送后自动生成文档并部署到 GitHub Pages。
+
+首次启用时，请在 GitHub 仓库的 Pages 设置中确认 source 为 **GitHub Actions**。
+
 ## 构建
 
 先设置 `VCPKG_ROOT` 环境变量，然后执行：
