@@ -73,8 +73,9 @@ python3 scripts/dta_simulator.py data/input.json data/material.json output.json
 输入和材料属性使用 SI 长度单位（m）、应力单位 MPa，输出包含每个计算步的裂纹长度、
 应力强度因子和裂纹扩展速率。该模型提供 NASGRO/AFGROW 风格的几何因子、阈值和断裂
 韧度判据，材料参数中的 `c` 和 `m` 定义 Paris 扩展关系。
-NDI 计划（包括“高频涡流”和 “High-Frequency Eddy Current”名称及 POD 曲线）
-已合并到 `data/input.json` 中。
+NDI 数据库位于 `data/NDI/HFEC.json`，包含“高频涡流”和
+“High-Frequency Eddy Current”名称及 POD 曲线；`data/input.json` 只配置检查手段、
+裂纹尺寸阈值（`threshold`）和检查间隔（`interval`）。
 
 增加第四个参数可执行蒙特卡洛仿真，并输出失效概率、寿命分位数和检查建议：
 

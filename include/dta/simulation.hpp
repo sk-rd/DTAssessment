@@ -59,8 +59,9 @@ public:
             lives.push_back(result.history.back().cycles);
             bool detected = false;
             for (const auto& state : result.history) {
-                if (state.cycles >= ndi_.start_cycles &&
-                    std::fmod(state.cycles - ndi_.start_cycles, ndi_.interval_cycles) < 1e-9 &&
+                if (state.cycles >= ndi_.interval_cycles &&
+                    std::fmod(state.cycles, ndi_.interval_cycles) < 1e-9 &&
+                    state.crack_length >= ndi_.threshold &&
                     std::uniform_real_distribution<double>(0.0, 1.0)(generator) <=
                         ndi_.probability_of_detection(state.crack_length)) {
                     detected = true;

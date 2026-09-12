@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -22,15 +23,12 @@ inline SimulationInput input_from_json(const std::string& filename) {
                           json.at("max_stress"), json.at("min_stress"),
                           json.at("cycles_per_step"), json.at("max_cycles"), {}};
     const auto& ndi = json.at("ndi");
-    input.ndi.name_zh = ndi.at("name_zh");
-    input.ndi.name_en = ndi.at("name_en");
-    input.ndi.start_cycles = ndi.at("start_cycles");
-    input.ndi.interval_cycles = ndi.at("interval_cycles");
-    for (const auto& point : ndi.at("pod")) {
-        input.ndi.pod.push_back({point.at("crack_length"), point.at("probability")});
-    }
-    if (input.ndi.interval_cycles <= 0.0 || input.ndi.pod.empty()) {
-        throw std::invalid_argument("NDI interval and POD curve are required");
+    input.ndi.name_zh = ndi.at("method");
+    input.ndi.name_en = ndi.at("method");
+    input.ndi.threshold = ndi.at("threshold");
+    input.ndi.interval_cycles = ndi.at("interval");
+    if (input.ndi.threshold <= 0.0 || input.ndi.interval_cycles <= 0.0) {
+        throw std::invalid_argument("NDI threshold and interval are required");
     }
     if (input.geometry != "center_crack" && input.geometry != "edge_crack") {
         throw std::invalid_argument("geometry must be center_crack or edge_crack");

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <stdexcept>
+#include <filesystem>
 
 #include <nlohmann/json.hpp>
 
@@ -14,13 +15,21 @@ inline NDI read_ndi_file(const std::string& path) {
     if (!file) throw std::runtime_error("cannot open NDI file: " + path);
     nlohmann::json json;
     file >> json;
-    NDI result{json.at("name_zh"), json.at("name_en"), json.at("start_cycles"),
-               json.at("interval_cycles"), {}};
+    NDI result{json.at("name_zh"), json.at("name_en"), 0.0, 0.0, {}};
     for (const auto& point : json.at("pod")) {
         result.pod.push_back({point.at("crack_length"), point.at("probability")});
     }
-    if (result.interval_cycles <= 0.0 || result.pod.empty()) {
-        throw std::invalid_argument("NDI interval and POD curve are required");
+
+    inline NDI read_ndi_database(const std::string& input_path, const NDI& plan) {
+        const auto database = std::filesystem::path(input_path).parent_path() /
+                              "NDI" / (plan.name_zh + ".json");
+        auto database_ndi = read_ndi_file(database.string());
+        database_ndi.threshold = plan.threshold;
+        database_ndi.interval_cycles = plan.interval_cycles;
+        return database_ndi;
+    }
+    if (result.pod.empty()) {
+        throw std::invalid_argument("NDI POD curve is required");
     }
     return result;
 }

@@ -7,11 +7,14 @@
 #include <nlohmann/json.hpp>
 
 #include "dta/damage_tolerance.hpp"
+#include "dta/io/ndi.hpp"
 
 namespace dta {
 
 inline SimulationInput read_input_file(const std::string& path) {
-    return input_from_json(path);
+    auto input = input_from_json(path);
+    input.ndi = read_ndi_database(path, input.ndi);
+    return input;
 }
 
 inline nlohmann::json output_to_json(const SimulationOutput& output) {
