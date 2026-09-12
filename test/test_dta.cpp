@@ -10,3 +10,14 @@ BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
     BOOST_TEST(output.history.front().crack_length == 0.01);
     BOOST_TEST(dta::output_to_json(output).at("history").size() == output.history.size());
 }
+
+BOOST_AUTO_TEST_CASE(monte_carlo_returns_inspection_advice) {
+    const auto material = dta::material_from_json("../data/material.json");
+    const auto input = dta::input_from_json("../data/input.json");
+    dta::MonteCarloConfig config;
+    config.samples = 20;
+    const auto result = dta::run_monte_carlo(material, input, config);
+    BOOST_TEST(result.samples == 20);
+    BOOST_TEST(result.tenth_percentile_cycles >= 0.0);
+    BOOST_TEST(!result.recommendation.empty());
+}

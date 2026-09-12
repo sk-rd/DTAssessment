@@ -69,3 +69,13 @@ python3 scripts/dta_simulator.py data/input.json data/material.json output.json
 输入和材料属性使用 SI 长度单位（m）、应力单位 MPa，输出包含每个计算步的裂纹长度、
 应力强度因子和裂纹扩展速率。该模型提供 NASGRO/AFGROW 风格的几何因子、阈值和断裂
 韧度判据，材料参数中的 `c` 和 `m` 定义 Paris 扩展关系。
+
+增加第四个参数可执行蒙特卡洛仿真，并输出失效概率、寿命分位数和检查建议：
+
+```bash
+dta_simulator data/input.json data/material.json simulation.json 1000
+```
+
+`include/dta/simulation.hpp` 位于损伤容限评估的外层，使用随机应力和初始裂纹样本
+调用 `assessment.hpp`，以第 10 百分位寿命的一半作为建议检查间隔。当失效概率超过
+阈值时，输出立即检查并缩短检查间隔的建议。
