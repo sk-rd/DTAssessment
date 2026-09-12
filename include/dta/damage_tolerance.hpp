@@ -93,10 +93,9 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
             return assess_damage_tolerance(material_, input_);
         }
         const double step = std::min(
-            {input.cycles_per_step, spectrum_point.cycles, input.max_cycles - cycles});
+            {input.cycles_per_step, spectrum_point.time, input.max_cycles - cycles});
         crack_length = std::min(input.critical_crack, crack_length + rate * step);
         cycles += step;
-        hours += spectrum_point.hours * (step / spectrum_point.cycles);
         ++spectrum_index;
     }
     return output;
