@@ -7,6 +7,7 @@
   "min_stress": 0.0,
   "cycles_per_step": 1000.0,
   "max_cycles": 100000.0,
+  "material": "Al-7050-T7451",
   "ndi": {
     "method": "HFEC",
     "threshold": 0.005,

@@ -67,7 +67,7 @@ python3 -c "import dta; print('DTAssessment bindings loaded')"
 `dta_simulator` 读取输入、材料和 NDI 三个 JSON 文件：
 
 ```bash
-python3 scripts/dta_simulator.py data/input.json data/material.json output.json
+python3 scripts/dta_simulator.py data/input.json data/material/Al-7050-T7451.json output.json
 ```
 
 输入和材料属性使用 SI 长度单位（m）、应力单位 MPa，输出包含每个计算步的裂纹长度、
@@ -76,11 +76,13 @@ python3 scripts/dta_simulator.py data/input.json data/material.json output.json
 NDI 数据库位于 `data/NDI/HFEC.json`，包含“高频涡流”和
 “High-Frequency Eddy Current”名称及 POD 曲线；`data/input.json` 只配置检查手段、
 裂纹尺寸阈值（`threshold`）和检查间隔（`interval`）。
+材料数据库位于 `data/material/Al-7050-T7451.json`，`input.json` 通过
+`material` 字段选择材料。
 
 增加第四个参数可执行蒙特卡洛仿真，并输出失效概率、寿命分位数和检查建议：
 
 ```bash
-dta_simulator data/input.json data/material.json simulation.json 1000
+dta_simulator data/input.json simulation.json 1000
 ```
 
 `include/dta/simulation.hpp` 位于损伤容限评估的外层，使用随机应力和初始裂纹样本

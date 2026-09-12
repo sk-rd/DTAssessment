@@ -3,7 +3,7 @@
 
 #include "dta/src.hpp"
 BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
-    const auto material = dta::read_material_file("../data/material.json");
+    const auto material = dta::read_material_file("../data/material/Al-7050-T7451.json");
     const auto input = dta::input_from_json("../data/input.json");
     const auto output = dta::assess_damage_tolerance(material, input);
     BOOST_TEST(!output.history.empty());
@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
 }
 
 BOOST_AUTO_TEST_CASE(monte_carlo_returns_inspection_advice) {
-    const auto material = dta::read_material_file("../data/material.json");
+    const auto material = dta::read_material_file("../data/material/Al-7050-T7451.json");
     const auto input = dta::input_from_json("../data/input.json");
     dta::SimulationConfig config;
     config.samples = 20;

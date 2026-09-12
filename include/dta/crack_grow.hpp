@@ -22,15 +22,11 @@ struct CrackState {
     double cycles{}, crack_length{}, delta_k{}, max_k{}, growth_rate{};
 };
 struct SimulationInput {
+    std::string material;
     std::string geometry{"center_crack"};
     double width{}, initial_crack{}, critical_crack{};
     double max_stress{}, min_stress{}, cycles_per_step{}, max_cycles{};
     NDI ndi;
-};
-struct SimulationInput {
-    std::string geometry{"center_crack"};
-    double width{}, initial_crack{}, critical_crack{};
-    double max_stress{}, min_stress{}, cycles_per_step{}, max_cycles{};
 };
 struct SimulationOutput {
     std::string termination;

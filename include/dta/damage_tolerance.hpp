@@ -18,7 +18,7 @@ inline SimulationInput input_from_json(const std::string& filename) {
     if (!file) throw std::runtime_error("cannot open input file: " + filename);
     nlohmann::json json;
     file >> json;
-    SimulationInput input{json.value("geometry", "center_crack"), json.at("width"),
+    SimulationInput input{json.at("material"), json.value("geometry", "center_crack"), json.at("width"),
                           json.at("initial_crack"), json.at("critical_crack"),
                           json.at("max_stress"), json.at("min_stress"),
                           json.at("cycles_per_step"), json.at("max_cycles"), {}};
