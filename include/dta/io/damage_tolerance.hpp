@@ -10,10 +10,6 @@
 
 namespace dta {
 
-inline Material read_material_file(const std::string& path) {
-    return material_from_json(path);
-}
-
 inline SimulationInput read_input_file(const std::string& path) {
     return input_from_json(path);
 }

@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include <nlohmann/json.hpp>
-
 #include "dta/damage_tolerance.hpp"
 
 namespace dta {
@@ -82,17 +80,6 @@ inline MonteCarloResult run_monte_carlo(const Material& material,
         output.recommendation = "inspect at the recommended interval and continue monitoring";
     }
     return output;
-}
-
-inline nlohmann::json simulation_to_json(const MonteCarloResult& result) {
-    return {
-        {"samples", result.samples},
-        {"failures", result.failures},
-        {"failure_probability", result.failure_probability},
-        {"tenth_percentile_cycles", result.tenth_percentile_cycles},
-        {"median_cycles", result.median_cycles},
-        {"recommended_inspection_interval", result.recommended_inspection_interval},
-        {"recommendation", result.recommendation}};
 }
 
 } // namespace dta

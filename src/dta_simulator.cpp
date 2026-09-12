@@ -3,8 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "dta/crack_growth.hpp"
-#include "dta/simulation.hpp"
+#include "dta/src.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc != 4 && argc != 5) {
@@ -19,10 +18,8 @@ int main(int argc, char* argv[]) {
         } else {
             dta::MonteCarloConfig config;
             config.samples = std::stoull(argv[4]);
-            std::ofstream output(argv[3]);
-            if (!output) throw std::runtime_error("cannot open output file: " + std::string(argv[3]));
-            output << dta::simulation_to_json(
-                dta::run_monte_carlo(material, input, config)).dump(2) << '\n';
+            dta::write_simulation_file(argv[3],
+                dta::run_monte_carlo(material, input, config));
         }
     } catch (const std::exception& error) {
         std::cerr << "dta_simulator: " << error.what() << '\n';

@@ -18,7 +18,9 @@ DTAssessment 是 **Damage Tolerance Assessment（损伤容限评估）** 的缩�
 - `include/dta/material.hpp`：材料属性与校验
 - `include/dta/crack_growth.hpp`：裂纹几何、应力强度因子和扩展速率
 - `include/dta/damage_tolerance.hpp`：损伤容限评估循环
-- `include/dta/io/json.hpp`：JSON 文件读写
+- `include/dta/io/material.hpp`：材料属性 JSON 读写
+- `include/dta/io/damage_tolerance.hpp`：损伤容限输入/输出 JSON 读写
+- `include/dta/io/simulation.hpp`：蒙特卡洛仿真输出 JSON 写入
 
 ## 依赖管理
 
