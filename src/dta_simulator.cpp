@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     try {
         const auto material = dta::read_material_file(argv[2]);
         const auto input = dta::read_input_file(argv[1]);
-        dta::write_output_file(argv[3], dta::simulate(material, input));
+        dta::write_output_file(argv[3], dta::assess_damage_tolerance(material, input));
     } catch (const std::exception& error) {
         std::cerr << "dta_simulator: " << error.what() << '\n';
         return 1;

@@ -17,6 +17,10 @@ target_include_directories(dta
 
 target_compile_features(dta INTERFACE cxx_std_17)
 
+find_package(nlohmann_json CONFIG REQUIRED)
+add_executable(dta_simulator src/dta_simulator.cpp)
+target_link_libraries(dta_simulator PRIVATE dta nlohmann_json::nlohmann_json)
+
 if(DTA_BUILD_PYTHON_BINDINGS)
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
     find_package(Boost CONFIG REQUIRED COMPONENTS python)
@@ -41,9 +45,6 @@ if(DTA_BUILD_PYTHON_BINDINGS)
         set_target_properties(dta_python PROPERTIES SUFFIX ".pyd")
     endif()
 
-    find_package(nlohmann_json CONFIG REQUIRED)
-    add_executable(dta_simulator src/dta_simulator.cpp)
-    target_link_libraries(dta_simulator PRIVATE dta nlohmann_json::nlohmann_json)
 endif()
 
 include(CTest)
@@ -62,3 +63,10 @@ install(TARGETS dta dta_simulator
 
 install(DIRECTORY include/ DESTINATION include)
 install(PROGRAMS scripts/dta_simulator.py DESTINATION bin)
+install(FILES
+    scripts/material.py
+    scripts/crack_growth.py
+    scripts/assessment.py
+    scripts/json_io.py
+    DESTINATION bin
+)

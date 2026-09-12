@@ -9,8 +9,16 @@ DTAssessment 是 **Damage Tolerance Assessment（损伤容限评估）** 的缩�
 
 - `doc/`：项目文档
 - `include/`：对外 `.hpp` 头文件，包含实现
-- `src/`：预留给非头文件化扩展
+- `src/`：命令行程序和 Python 绑定
+- `scripts/`：Python 的材料、裂纹扩展、损伤容限评估和 JSON I/O 模块
 - `test/`：测试代码
+
+核心功能按领域拆分为独立模块：
+
+- `include/dta/material.hpp`：材料属性与校验
+- `include/dta/crack_growth.hpp`：裂纹几何、应力强度因子和扩展速率
+- `include/dta/assessment.hpp`：损伤容限评估循环
+- `include/dta/json_io.hpp`：JSON 文件读写
 
 ## 依赖管理
 
