@@ -9,7 +9,7 @@
   "max_cycles": 100000.0,
   "spectrum": "spectrum.json",
   "material": "Al-7050-T7451",
-  "ndi": {
+  "NDI plan": {
     "method": "HFEC",
     "threshold": {
       "flight_cycles": 1000.0,

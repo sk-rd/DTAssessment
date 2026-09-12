@@ -75,7 +75,7 @@ python3 scripts/dta_simulator.py data/input.json data/material/Al-7050-T7451.jso
 韧度判据，材料参数中的 `c` 和 `m` 定义 Paris 扩展关系。
 NDI 数据库位于 `data/NDI/HFEC.json`，包含“高频涡流”和
 “High-Frequency Eddy Current”名称及 POD 曲线；`data/input.json` 只配置检查手段、
-裂纹尺寸阈值（`threshold`）和检查间隔（`interval`）。
+裂纹尺寸阈值（`threshold`）和检查间隔（`interval`）配置在 `NDI plan` 中。
 材料数据库位于 `data/material/Al-7050-T7451.json`，`input.json` 通过
 `material` 字段选择材料。
 载荷谱保存在 `data/spectrum.json`，`input.json` 通过 `spectrum` 字段引用。载荷谱文件
