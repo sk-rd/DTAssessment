@@ -1,6 +1,6 @@
 #include <boost/python.hpp>
 
-#include "dta/dta.hpp"
+#include "dta/src.hpp"
 
 BOOST_PYTHON_MODULE(dta) {
 }
