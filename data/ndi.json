@@ -1,0 +1,11 @@
+{
+  "method": "ultrasonic_testing",
+  "start_cycles": 1000.0,
+  "interval_cycles": 1000.0,
+  "pod": [
+    {"crack_length": 0.005, "probability": 0.2},
+    {"crack_length": 0.01, "probability": 0.7},
+    {"crack_length": 0.02, "probability": 0.95},
+    {"crack_length": 0.05, "probability": 0.99}
+  ]
+}

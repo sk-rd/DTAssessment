@@ -1,13 +1,16 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "dta/sample.hpp"
+#include "dta/ndi.hpp"
 
 namespace dta {
 
@@ -27,13 +30,14 @@ struct SimulationResult {
     double median_cycles{};
     double recommended_inspection_interval{};
     std::string recommendation;
+    std::size_t detected_before_failure{};
 };
 
 class Simulation {
 public:
     Simulation(const Material& material, const SimulationInput& nominal,
-               SimulationConfig config = {})
-        : material_(material), nominal_(nominal), config_(config) {}
+               SimulationConfig config = {}, NDI ndi = {})
+        : material_(material), nominal_(nominal), config_(config), ndi_(std::move(ndi)) {}
 
     SimulationResult run() const {
         validate_config();
@@ -43,6 +47,7 @@ public:
         std::vector<double> lives;
         lives.reserve(config_.samples);
         std::size_t failures = 0;
+        std::size_t detected_count = 0;
 
         for (std::size_t i = 0; i < config_.samples; ++i) {
             SimulationInput input = nominal_;
@@ -52,7 +57,18 @@ public:
                 nominal_.initial_crack * std::max(0.01, crack_factor(generator)));
             const auto result = Sample(material_, input).run();
             lives.push_back(result.history.back().cycles);
-            if (result.termination == "fracture") ++failures;
+            bool detected = false;
+            for (const auto& state : result.history) {
+                if (state.cycles >= ndi_.start_cycles &&
+                    std::fmod(state.cycles - ndi_.start_cycles, ndi_.interval_cycles) < 1e-9 &&
+                    std::uniform_real_distribution<double>(0.0, 1.0)(generator) <=
+                        ndi_.probability_of_detection(state.crack_length)) {
+                    detected = true;
+                    break;
+                }
+            }
+            if (detected) ++detected_count;
+            if (result.termination == "fracture" && !detected) ++failures;
         }
 
         std::sort(lives.begin(), lives.end());
@@ -67,6 +83,7 @@ public:
             percentile(0.50),
             std::max(1.0, percentile(0.10) / 2.0),
             {}};
+        result.detected_before_failure = detected_count;
         result.recommendation =
             result.failure_probability > config_.failure_probability_limit
                 ? "immediate inspection and shorter inspection interval"
@@ -87,6 +104,7 @@ private:
     Material material_;
     SimulationInput nominal_;
     SimulationConfig config_;
+    NDI ndi_;
 };
 
 } // namespace dta

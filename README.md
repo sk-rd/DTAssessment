@@ -16,8 +16,10 @@ DTAssessment 是 **Damage Tolerance Assessment（损伤容限评估）** 的缩�
 核心功能按领域拆分为独立模块：
 
 - `include/dta/material.hpp`：材料属性与校验
-- `include/dta/crack_growth.hpp`：裂纹几何、应力强度因子和扩展速率
+- `include/dta/crack_grow.hpp`：单次裂纹扩展分析
+- `include/dta/ndi.hpp`：无损检测计划和 POD 曲线
 - `include/dta/damage_tolerance.hpp`：损伤容限评估循环
+- `include/dta/simulation.hpp`：蒙特卡洛仿真
 - `include/dta/io/material.hpp`：材料属性 JSON 读写
 - `include/dta/io/damage_tolerance.hpp`：损伤容限输入/输出 JSON 读写
 - `include/dta/io/simulation.hpp`：蒙特卡洛仿真输出 JSON 写入
@@ -62,7 +64,7 @@ python3 -c "import dta; print('DTAssessment bindings loaded')"
 
 ## JSON 裂纹扩展模拟
 
-`dta_simulator` 和 `scripts/dta_simulator.py` 都读取三个 JSON 文件：
+`dta_simulator` 读取输入、材料和 NDI 三个 JSON 文件：
 
 ```bash
 python3 scripts/dta_simulator.py data/input.json data/material.json output.json
@@ -71,16 +73,18 @@ python3 scripts/dta_simulator.py data/input.json data/material.json output.json
 输入和材料属性使用 SI 长度单位（m）、应力单位 MPa，输出包含每个计算步的裂纹长度、
 应力强度因子和裂纹扩展速率。该模型提供 NASGRO/AFGROW 风格的几何因子、阈值和断裂
 韧度判据，材料参数中的 `c` 和 `m` 定义 Paris 扩展关系。
+NDI 计划保存在 `data/ndi.json`，POD 曲线横坐标为缺陷尺寸，纵坐标为检出率。
 
 增加第四个参数可执行蒙特卡洛仿真，并输出失效概率、寿命分位数和检查建议：
 
 ```bash
-dta_simulator data/input.json data/material.json simulation.json 1000
+dta_simulator data/input.json data/material.json data/ndi.json simulation.json 1000
 ```
 
 `include/dta/simulation.hpp` 位于损伤容限评估的外层，使用随机应力和初始裂纹样本
 调用 `damage_tolerance.hpp`，以第 10 百分位寿命的一半作为建议检查间隔。当失效概率超过
 阈值时，输出立即检查并缩短检查间隔的建议。
 
-蒙特卡洛仿真按标准术语分为两个类：`Sample` 执行一次裂纹扩展仿真，
-`Simulation` 创建并执行多个独立的 `Sample`，再统计失效概率和寿命分位数。
+模块职责为：`Material` 存储材料属性；`CrackGrow` 执行单次裂纹扩展；
+`NDI` 描述无损检测计划和 POD 曲线；`Simulation` 执行多次 `Sample` 并结合 NDI
+判断破坏前是否检出；`DamageTolerance` 负责解析结果并给出可靠性指标。

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dta/damage_tolerance.hpp"
+#include "dta/crack_grow.hpp"
 
 namespace dta {
 
@@ -10,7 +10,7 @@ public:
         : material_(material), input_(input) {}
 
     SimulationOutput run() const {
-        return assess_damage_tolerance(material_, input_);
+        return CrackGrow(material_, input_).run();
     }
 
 private:

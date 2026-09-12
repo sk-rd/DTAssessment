@@ -1,11 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include <fstream>
-#include <stdexcept>
 #include <string>
-
-#include <nlohmann/json.hpp>
 
 namespace dta {
 
@@ -22,13 +18,7 @@ inline void require_positive(const char* name, double value) {
     }
 }
 
-inline Material material_from_json(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file) throw std::runtime_error("cannot open material file: " + filename);
-    nlohmann::json json;
-    file >> json;
-    Material material{json.at("c"), json.at("m"), json.at("threshold_delta_k"),
-                      json.at("fracture_toughness")};
+inline Material validate_material(Material material) {
     require_positive("c", material.c);
     require_positive("m", material.m);
     require_positive("threshold_delta_k", material.threshold_delta_k);

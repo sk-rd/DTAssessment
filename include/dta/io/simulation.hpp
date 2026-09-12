@@ -18,6 +18,7 @@ inline nlohmann::json simulation_to_json(const SimulationResult& result) {
         {"tenth_percentile_cycles", result.tenth_percentile_cycles},
         {"median_cycles", result.median_cycles},
         {"recommended_inspection_interval", result.recommended_inspection_interval},
+        {"detected_before_failure", result.detected_before_failure},
         {"recommendation", result.recommendation}};
 }
 

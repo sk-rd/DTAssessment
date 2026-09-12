@@ -8,20 +8,9 @@
 
 #include <nlohmann/json.hpp>
 
-#include "dta/crack_growth.hpp"
+#include "dta/crack_grow.hpp"
 
 namespace dta {
-
-struct SimulationInput {
-    std::string geometry{"center_crack"};
-    double width{}, initial_crack{}, critical_crack{};
-    double max_stress{}, min_stress{}, cycles_per_step{}, max_cycles{};
-};
-
-struct SimulationOutput {
-    std::string termination;
-    std::vector<CrackState> history;
-};
 
 inline SimulationInput input_from_json(const std::string& filename) {
     std::ifstream file(filename);
@@ -67,6 +56,10 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
             output.termination = "fracture";
             break;
         }
+
+        inline SimulationOutput CrackGrow::run() const {
+            return assess_damage_tolerance(material_, input_);
+        }
         if (cycles >= input.max_cycles) {
             output.termination = "max_cycles";
             break;
@@ -77,5 +70,20 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
     }
     return output;
 }
+
+struct ReliabilityResult {
+    double failure_probability{};
+    double median_cycles{};
+    double recommended_inspection_interval{};
+};
+
+class DamageTolerance {
+public:
+    template <typename Result>
+    static ReliabilityResult analyze(const Result& result) {
+        return {result.failure_probability, result.median_cycles,
+                result.recommended_inspection_interval};
+    }
+};
 
 } // namespace dta

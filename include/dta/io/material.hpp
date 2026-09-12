@@ -11,7 +11,13 @@
 namespace dta {
 
 inline Material read_material_file(const std::string& path) {
-    return material_from_json(path);
+    std::ifstream file(path);
+    if (!file) throw std::runtime_error("cannot open material file: " + path);
+    nlohmann::json json;
+    file >> json;
+    return validate_material(Material{json.at("c"), json.at("m"),
+                                      json.at("threshold_delta_k"),
+                                      json.at("fracture_toughness")});
 }
 
 } // namespace dta
