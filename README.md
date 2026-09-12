@@ -53,7 +53,7 @@ ctest --preset default
 
 ```bash
 export PYTHONPATH="$PWD/build:$PYTHONPATH"
-python3 -c "import dta; print(dta.add(2, 3))"
+python3 -c "import dta; print('DTAssessment bindings loaded')"
 ```
 
 如不需要 Python 接口，可以通过 `-DDTA_BUILD_PYTHON_BINDINGS=OFF` 关闭。

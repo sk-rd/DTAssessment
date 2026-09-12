@@ -4,10 +4,6 @@
 #include "dta/dta.hpp"
 #include <nlohmann/json.hpp>
 
-BOOST_AUTO_TEST_CASE(add_returns_sum) {
-    BOOST_TEST(dta::add(2, 3) == 5);
-}
-
 BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
     const auto material = dta::material_from_json({
         {"c", 1e-10}, {"m", 3.0}, {"threshold_delta_k", 1.0}, {"fracture_toughness", 80.0}});
