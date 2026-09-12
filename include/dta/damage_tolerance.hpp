@@ -70,6 +70,8 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
     double hours = 0.0;
     double crack_length = input.initial_crack;
     std::size_t spectrum_index = 0;
+    double previous_time = -1.0;
+    const double spectrum_duration = input.spectrum.points.back().time;
     while (true) {
         const auto& spectrum_point =
             input.spectrum.points[spectrum_index % input.spectrum.points.size()];
@@ -92,10 +94,17 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
         inline SimulationOutput CrackGrow::run() const {
             return assess_damage_tolerance(material_, input_);
         }
-        const double step = std::min(
-            {input.cycles_per_step, spectrum_point.time, input.max_cycles - cycles});
+        const double step = std::min(input.cycles_per_step, input.max_cycles - cycles);
         crack_length = std::min(input.critical_crack, crack_length + rate * step);
         cycles += step;
+        const double elapsed_hours =
+            previous_time < 0.0
+                ? spectrum_point.time
+                : (spectrum_point.time > previous_time
+                       ? spectrum_point.time - previous_time
+                       : spectrum_duration - previous_time + spectrum_point.time);
+        hours += elapsed_hours;
+        previous_time = spectrum_point.time;
         ++spectrum_index;
     }
     return output;

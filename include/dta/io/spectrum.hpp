@@ -26,9 +26,11 @@ inline Spectrum read_spectrum_file(const std::string& path) {
     if (result.reference_stress <= 0.0 || result.points.empty()) {
         throw std::invalid_argument("spectrum reference stress and points are required");
     }
-    for (const auto& point : result.points) {
-        if (point.time <= 0.0 || !std::isfinite(point.factor)) {
-            throw std::invalid_argument("spectrum times must be positive and factors finite");
+    for (std::size_t i = 0; i < result.points.size(); ++i) {
+        const auto& point = result.points[i];
+        if (point.time < 0.0 || !std::isfinite(point.factor) ||
+            (i > 0 && point.time <= result.points[i - 1].time)) {
+            throw std::invalid_argument("spectrum times must be ordered and factors finite");
         }
     }
     return result;

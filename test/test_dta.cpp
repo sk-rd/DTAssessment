@@ -6,7 +6,9 @@ BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
     const auto material = dta::read_material_file("../data/material/Al-7050-T7451.json");
     const auto input = dta::input_from_json("../data/input.json");
     BOOST_TEST(input.spectrum.reference_stress == 100.0);
-    BOOST_TEST(input.spectrum.points.size() == 4);
+    BOOST_TEST(input.spectrum.points.size() == 9);
+    BOOST_TEST(input.spectrum.points.front().time == 0.0);
+    BOOST_TEST(input.spectrum.points.back().time == 2.0);
     const auto output = dta::assess_damage_tolerance(material, input);
     BOOST_TEST(!output.history.empty());
     BOOST_TEST(output.history.front().crack_length == 0.01);

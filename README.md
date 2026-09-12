@@ -79,8 +79,9 @@ NDI 数据库位于 `data/NDI/HFEC.json`，包含“高频涡流”和
 材料数据库位于 `data/material/Al-7050-T7451.json`，`input.json` 通过
 `material` 字段选择材料。
 载荷谱保存在 `data/spectrum.json`，`input.json` 通过 `spectrum` 字段引用。载荷谱文件
-包含参考应力 `reference_stress` 和 `n×2` 时间序列 `spectrum`，每个元素为 `[t, f(t)]`；
-程序将参考应力与 `f(t)` 相乘得到实际最大应力。当前 `t` 按飞行循环计量。NDI 的
+包含参考应力 `reference_stress` 和 `n×2` 时间序列 `spectrum`，每个元素为
+`[t, f(t)]`，其中 `t` 的单位为小时、示例谱覆盖两小时飞行；程序将参考应力与
+`f(t)` 相乘得到实际最大应力。NDI 的
 `threshold` 和 `interval` 可分别配置
 `flight_cycles`、`flight_hours`，未配置的维度置为 `-1` 并忽略。
 
