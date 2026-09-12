@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 5 && argc != 6) {
-        std::cerr << "usage: dta_simulator <input.json> <material.json> <ndi.json> <output.json> [samples]\n";
+        std::cerr << "usage: dta_simulator <input.json> <material.json> <ndi/HFEC.json> <output.json> [samples]\n";
         return 2;
     }
     try {

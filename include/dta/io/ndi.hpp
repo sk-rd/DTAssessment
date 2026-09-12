@@ -14,7 +14,8 @@ inline NDI read_ndi_file(const std::string& path) {
     if (!file) throw std::runtime_error("cannot open NDI file: " + path);
     nlohmann::json json;
     file >> json;
-    NDI result{json.at("method"), json.at("start_cycles"), json.at("interval_cycles"), {}};
+    NDI result{json.at("name_zh"), json.at("name_en"), json.at("start_cycles"),
+               json.at("interval_cycles"), {}};
     for (const auto& point : json.at("pod")) {
         result.pod.push_back({point.at("crack_length"), point.at("probability")});
     }

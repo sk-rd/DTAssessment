@@ -13,7 +13,8 @@ struct PodPoint {
 };
 
 struct NDI {
-    std::string method;
+    std::string name_zh;
+    std::string name_en;
     double start_cycles{};
     double interval_cycles{};
     std::vector<PodPoint> pod;

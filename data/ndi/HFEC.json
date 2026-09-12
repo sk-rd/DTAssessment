@@ -1,5 +1,6 @@
 {
-  "method": "ultrasonic_testing",
+  "name_zh": "高频涡流",
+  "name_en": "High-Frequency Eddy Current",
   "start_cycles": 1000.0,
   "interval_cycles": 1000.0,
   "pod": [
