@@ -51,7 +51,8 @@ public:
 
         for (std::size_t i = 0; i < config_.samples; ++i) {
             SimulationInput input = nominal_;
-            input.max_stress = nominal_.max_stress * std::max(0.01, stress_factor(generator));
+            input.spectrum.reference_stress =
+                nominal_.spectrum.reference_stress * std::max(0.01, stress_factor(generator));
             input.initial_crack = std::min(
                 nominal_.critical_crack * 0.999,
                 nominal_.initial_crack * std::max(0.01, crack_factor(generator)));

@@ -11,6 +11,7 @@
 
 #include "dta/crack_grow.hpp"
 #include "dta/ndi.hpp"
+#include "dta/io/spectrum.hpp"
 namespace dta {
 
 inline SimulationInput input_from_json(const std::string& filename) {
@@ -21,7 +22,7 @@ inline SimulationInput input_from_json(const std::string& filename) {
     SimulationInput input{json.at("material"), json.value("geometry", "center_crack"), json.at("width"),
                           json.at("initial_crack"), json.at("critical_crack"),
                           json.at("max_stress"), json.at("min_stress"),
-                          json.at("cycles_per_step"), json.at("max_cycles"), {}};
+                          json.at("cycles_per_step"), json.at("max_cycles"), {}, {}};
     const auto& ndi = json.at("ndi");
     input.ndi.name_zh = ndi.at("method");
     input.ndi.name_en = ndi.at("method");
@@ -30,6 +31,9 @@ inline SimulationInput input_from_json(const std::string& filename) {
     if (input.ndi.threshold <= 0.0 || input.ndi.interval_cycles <= 0.0) {
         throw std::invalid_argument("NDI threshold and interval are required");
     }
+    const auto spectrum_path =
+        std::filesystem::path(filename).parent_path() / json.at("spectrum").get<std::string>();
+    input.spectrum = read_spectrum_file(spectrum_path.string());
     if (input.geometry != "center_crack" && input.geometry != "edge_crack") {
         throw std::invalid_argument("geometry must be center_crack or edge_crack");
     }
@@ -56,7 +60,12 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
     SimulationOutput output;
     double cycles = 0.0;
     double crack_length = input.initial_crack;
+    std::size_t spectrum_index = 0;
     while (true) {
+        const auto& spectrum_point =
+            input.spectrum.points[spectrum_index % input.spectrum.points.size()];
+        const CrackLoad load{input.spectrum.reference_stress * spectrum_point.factor,
+                             input.min_stress};
         const double dk = delta_k(geometry, load, crack_length);
         const double mk = max_k(geometry, load, crack_length);
         const double rate = growth_rate(material, geometry, load, crack_length);
@@ -74,9 +83,11 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
         inline SimulationOutput CrackGrow::run() const {
             return assess_damage_tolerance(material_, input_);
         }
-        const double step = std::min(input.cycles_per_step, input.max_cycles - cycles);
+        const double step = std::min(
+            {input.cycles_per_step, spectrum_point.cycles, input.max_cycles - cycles});
         crack_length = std::min(input.critical_crack, crack_length + rate * step);
         cycles += step;
+        ++spectrum_index;
     }
     return output;
 }

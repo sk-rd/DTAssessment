@@ -78,6 +78,8 @@ NDI 数据库位于 `data/NDI/HFEC.json`，包含“高频涡流”和
 裂纹尺寸阈值（`threshold`）和检查间隔（`interval`）。
 材料数据库位于 `data/material/Al-7050-T7451.json`，`input.json` 通过
 `material` 字段选择材料。
+载荷谱保存在 `data/spectrum.json`，`input.json` 通过 `spectrum` 字段引用。载荷谱文件
+包含参考应力 `reference_stress` 和载荷系数；程序将二者相乘得到每个谱块的实际最大应力。
 
 增加第四个参数可执行蒙特卡洛仿真，并输出失效概率、寿命分位数和检查建议：
 

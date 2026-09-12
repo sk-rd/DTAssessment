@@ -11,6 +11,7 @@
 
 #include "dta/material.hpp"
 #include "dta/ndi.hpp"
+#include "dta/spectrum.hpp"
 
 namespace dta {
 
@@ -27,6 +28,7 @@ struct SimulationInput {
     double width{}, initial_crack{}, critical_crack{};
     double max_stress{}, min_stress{}, cycles_per_step{}, max_cycles{};
     NDI ndi;
+    Spectrum spectrum;
 };
 struct SimulationOutput {
     std::string termination;

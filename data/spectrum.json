@@ -1,0 +1,9 @@
+{
+  "reference_stress": 100.0,
+  "spectrum": [
+    {"cycles": 1000.0, "factor": 0.8},
+    {"cycles": 1000.0, "factor": 1.0},
+    {"cycles": 1000.0, "factor": 1.2},
+    {"cycles": 1000.0, "factor": 0.6}
+  ]
+}
