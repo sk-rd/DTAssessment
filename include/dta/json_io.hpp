@@ -11,19 +11,11 @@
 namespace dta {
 
 inline Material read_material_file(const std::string& path) {
-    std::ifstream file(path);
-    if (!file) throw std::runtime_error("cannot open material file: " + path);
-    nlohmann::json json;
-    file >> json;
-    return material_from_json(json);
+    return material_from_json(path);
 }
 
 inline SimulationInput read_input_file(const std::string& path) {
-    std::ifstream file(path);
-    if (!file) throw std::runtime_error("cannot open input file: " + path);
-    nlohmann::json json;
-    file >> json;
-    return input_from_json(json);
+    return input_from_json(path);
 }
 
 inline nlohmann::json output_to_json(const SimulationOutput& output) {

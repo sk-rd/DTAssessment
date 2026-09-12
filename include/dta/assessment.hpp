@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <fstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -22,7 +23,11 @@ struct SimulationOutput {
     std::vector<CrackState> history;
 };
 
-inline SimulationInput input_from_json(const nlohmann::json& json) {
+inline SimulationInput input_from_json(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file) throw std::runtime_error("cannot open input file: " + filename);
+    nlohmann::json json;
+    file >> json;
     SimulationInput input{json.value("geometry", "center_crack"), json.at("width"),
                           json.at("initial_crack"), json.at("critical_crack"),
                           json.at("max_stress"), json.at("min_stress"),
