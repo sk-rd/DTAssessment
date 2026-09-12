@@ -7,13 +7,6 @@
     "history_interval": 100,
     "seed": 2026
   },
-  "material": {
-    "paris_c": 4e-9,
-    "paris_m": 3.0,
-    "toughness": 35.0,
-    "threshold": 1.5,
-    "walker_gamma": 0.5
-  },
   "spectrum": [
     {"maximum": 95.0, "minimum": 9.5, "cycles": 99},
     {"maximum": 160.0, "minimum": 16.0, "cycles": 1}

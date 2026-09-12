@@ -13,6 +13,7 @@ NASGRO/DARWIN 的复刻，示例材料参数和几何模型未经工程标定。
 ```bash
 /home/runner/work/DTAssessment/DTAssessment/build/dta_assess \
   /home/runner/work/DTAssessment/DTAssessment/data/example.json \
+  /home/runner/work/DTAssessment/DTAssessment/data/material.json \
   /tmp/dta-result.json
 ```
 
@@ -20,15 +21,34 @@ NASGRO/DARWIN 的复刻，示例材料参数和几何模型未经工程标定。
 100 次蒙特卡洛试验，每次最多 3000 个循环。输出包含裂纹扩展曲线、剩余强度曲线、
 扩展寿命以及各级失效、MSD、MED 的概率和 95% Wilson 置信区间。
 命令行成功返回 0，输入/计算/文件错误返回 1 并向 stderr 输出 JSON 错误对象，
-参数数量错误返回 2。计算完成前不会打开输出文件；输入与输出不能是同一个文件。
+参数数量错误返回 2。计算完成前不会打开输出文件；输出不能与评估输入或材料文件是同一个文件。
 
 ## 输入与模型
 
-完整输入格式见
-[`data/example.json`](/home/runner/work/DTAssessment/DTAssessment/data/example.json)。
+评估输入格式见
+[`data/example.json`](/home/runner/work/DTAssessment/DTAssessment/data/example.json)，
+材料属性单独存储在
+[`data/material.json`](/home/runner/work/DTAssessment/DTAssessment/data/material.json)。
 `schema_version` 必须是整数 `1`；除两种损伤判据的计数阈值默认是 `2` 外，
 示例中的字段均为必填。未知字段、重复 JSON 键、非法单位和参数会被拒绝。
 各级 ID 必须由 1–128 个英文字母、数字、下划线或连字符组成，同级不重复。
+
+### 独立材料文件
+
+命令行按 `dta_assess INPUT.json MATERIAL.json OUTPUT.json` 分别读取评估配置与材料参数。
+材料文件的顶层直接包含 `paris_c`、`paris_m`、`toughness`、`threshold`、
+`walker_gamma` 五个必填数值字段，不再包裹在 `material` 对象中。同一材料文件可供
+多个评估任务复用；当前一个任务中的所有细节仍共用一组材料参数。
+
+材料文件使用下述统一单位，不单独定义单位或进行单位转换。缺失、未知、重复字段、
+非数值、非有限数值和不符合物理约束的参数均会报错；不会回退到默认材料参数。
+两个输入文件分别受 4 MiB 大小和 32 层 JSON 嵌套限制。
+
+为兼容已有调用，旧式 `dta_assess INPUT.json OUTPUT.json` 和单参数 JSON API
+仍支持评估输入中的内嵌 `material` 对象。使用独立材料输入时，评估 JSON 中必须
+删除 `material` 字段；同时提供两处材料会报错，不会静默覆盖。
+
+### 物理参数与计算约定
 
 - **单位**：长度 m，应力 MPa，应力强度因子 MPa√m，寿命为循环数，不能混用 mm。
   `paris_c` 的单位为 m/cycle/(MPa√m)^`paris_m`，必须与材料数据标定单位一致。
@@ -143,11 +163,16 @@ ctest --test-dir /home/runner/work/DTAssessment/DTAssessment/build -C Release --
 
 ```bash
 export PYTHONPATH="/home/runner/work/DTAssessment/DTAssessment/build:$PYTHONPATH"
-python3 -c "import dta; from pathlib import Path; print(dta.assess_json(Path('/home/runner/work/DTAssessment/DTAssessment/data/example.json').read_text()))"
+python3 -c "import dta; from pathlib import Path; print(dta.assess_json(Path('/home/runner/work/DTAssessment/DTAssessment/data/example.json').read_text(), Path('/home/runner/work/DTAssessment/DTAssessment/data/material.json').read_text()))"
 ```
 
 如不需要 Python 接口，可以通过 `-DDTA_BUILD_PYTHON_BINDINGS=OFF` 关闭。
-`dta.assess_json` 接受 JSON 字符串、返回 JSON 字符串；错误转换为 Python `ValueError`。
+`dta.assess_json(input_text, material_text)` 接受评估和材料两个 JSON 字符串，
+返回结果 JSON 字符串；错误转换为 Python `ValueError`。字符串接口不读取文件，
+由调用方读取各自文件后传入。原有单字符串接口仅用于内嵌材料的旧式输入。
+C++ 对应提供 `assessment_from_json(input, material)`、
+`parse_assessment(input_text, material_text)` 和 `assess_json(input_text, material_text)`
+双参数重载，并保留原有单参数接口。
 原有 `dta.add` 接口保留。
 
 仅生成文档、不安装计算依赖时，请同时设置 `-DBUILD_TESTING=OFF`、

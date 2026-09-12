@@ -79,10 +79,7 @@ inline Json probability(unsigned events, unsigned trials) {
             {"wilson_95", {std::max(0.0, center - half), std::min(1.0, center + half)}}};
 }
 
-} // namespace json_detail
-
-inline Assessment assessment_from_json(const nlohmann::json& input) {
-    using namespace json_detail;
+inline Assessment assessment_from_json_impl(const Json& input, const Json& material) {
     keys(input, {"schema_version", "units", "simulation", "material", "spectrum", "fleet"});
     if (count(input.at("schema_version")) != 1) {
         throw std::invalid_argument("unsupported schema_version");
@@ -100,7 +97,6 @@ inline Assessment assessment_from_json(const nlohmann::json& input) {
     result.history_interval = count(simulation.at("history_interval"));
     result.seed = integer(simulation.at("seed"), std::numeric_limits<std::uint64_t>::max());
 
-    const auto& material = input.at("material");
     keys(material, {"paris_c", "paris_m", "toughness", "threshold", "walker_gamma"});
     result.material = {number(material.at("paris_c")), number(material.at("paris_m")),
                        number(material.at("toughness")), number(material.at("threshold")),
@@ -155,7 +151,7 @@ inline Assessment assessment_from_json(const nlohmann::json& input) {
     return result;
 }
 
-inline Assessment parse_assessment(const std::string& text) {
+inline Json parse_json(const std::string& text) {
     if (text.size() > 4 * 1024 * 1024) {
         throw std::invalid_argument("input exceeds 4 MiB");
     }
@@ -177,7 +173,31 @@ inline Assessment parse_assessment(const std::string& text) {
         }
         return true;
     };
-    return assessment_from_json(nlohmann::json::parse(text, callback));
+    return Json::parse(text, callback);
+}
+
+} // namespace json_detail
+
+inline Assessment assessment_from_json(const nlohmann::json& input) {
+    return json_detail::assessment_from_json_impl(input, input.at("material"));
+}
+
+inline Assessment assessment_from_json(const nlohmann::json& input,
+                                       const nlohmann::json& material) {
+    if (input.contains("material")) {
+        throw std::invalid_argument("inline material is not allowed with a separate material input");
+    }
+    return json_detail::assessment_from_json_impl(input, material);
+}
+
+inline Assessment parse_assessment(const std::string& text) {
+    return assessment_from_json(json_detail::parse_json(text));
+}
+
+inline Assessment parse_assessment(const std::string& text, const std::string& material_text) {
+    const auto input = json_detail::parse_json(text);
+    const auto material = json_detail::parse_json(material_text);
+    return assessment_from_json(input, material);
 }
 
 inline nlohmann::json result_to_json(const Assessment& input, const Result& result) {
@@ -227,6 +247,11 @@ inline nlohmann::json result_to_json(const Assessment& input, const Result& resu
 
 inline std::string assess_json(const std::string& text) {
     const auto input = parse_assessment(text);
+    return result_to_json(input, assess(input)).dump(2);
+}
+
+inline std::string assess_json(const std::string& text, const std::string& material_text) {
+    const auto input = parse_assessment(text, material_text);
     return result_to_json(input, assess(input)).dump(2);
 }
 

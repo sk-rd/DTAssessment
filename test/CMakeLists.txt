@@ -19,6 +19,7 @@ target_compile_definitions(dta_tests PRIVATE DTA_SOURCE_DIR="${PROJECT_SOURCE_DI
 if(DTA_BUILD_CLI)
     add_test(NAME dta_cli_example
         COMMAND dta_assess "${PROJECT_SOURCE_DIR}/data/example.json"
+                           "${PROJECT_SOURCE_DIR}/data/material.json"
                            "${CMAKE_CURRENT_BINARY_DIR}/assessment-result.json")
 endif()
 

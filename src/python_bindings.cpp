@@ -15,9 +15,20 @@ std::string assess_json(const std::string& input) {
     return {};
 }
 
+std::string assess_json_with_material(const std::string& input, const std::string& material) {
+    try {
+        return dta::assess_json(input, material);
+    } catch (const std::exception& error) {
+        PyErr_SetString(PyExc_ValueError, error.what());
+        boost::python::throw_error_already_set();
+    }
+    return {};
+}
+
 } // namespace
 
 BOOST_PYTHON_MODULE(dta) {
     boost::python::def("add", &dta::add);
     boost::python::def("assess_json", &assess_json);
+    boost::python::def("assess_json", &assess_json_with_material);
 }

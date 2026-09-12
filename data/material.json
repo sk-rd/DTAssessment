@@ -1,0 +1,7 @@
+{
+  "paris_c": 4e-9,
+  "paris_m": 3.0,
+  "toughness": 35.0,
+  "threshold": 1.5,
+  "walker_gamma": 0.5
+}
