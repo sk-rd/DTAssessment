@@ -6,7 +6,7 @@
 
 #include <nlohmann/json.hpp>
 
-#include "dta/assessment.hpp"
+#include "dta/damage_tolerance.hpp"
 
 namespace dta {
 
