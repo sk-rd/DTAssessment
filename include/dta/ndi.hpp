@@ -15,10 +15,10 @@ struct PodPoint {
 struct NDI {
     std::string name_zh;
     std::string name_en;
-    double threshold_cycles{};
-    double threshold_hours{};
-    double interval_cycles{};
-    double interval_hours{};
+    double threshold_cycles{-1.0};
+    double threshold_hours{-1.0};
+    double interval_cycles{-1.0};
+    double interval_hours{-1.0};
     std::vector<PodPoint> pod;
 
     double probability_of_detection(double crack_length) const {
