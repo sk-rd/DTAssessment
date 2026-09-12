@@ -7,6 +7,7 @@ namespace dta {
 
 struct SpectrumPoint {
     double cycles{};
+    double hours{};
     double factor{};
 };
 

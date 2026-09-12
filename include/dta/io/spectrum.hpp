@@ -18,14 +18,14 @@ inline Spectrum read_spectrum_file(const std::string& path) {
     file >> json;
     Spectrum result{json.at("reference_stress"), {}};
     for (const auto& point : json.at("spectrum")) {
-        result.points.push_back({point.at("cycles"), point.at("factor")});
+        result.points.push_back({point.at("cycles"), point.at("hours"), point.at("factor")});
     }
     if (result.reference_stress <= 0.0 || result.points.empty()) {
         throw std::invalid_argument("spectrum reference stress and points are required");
     }
     for (const auto& point : result.points) {
-        if (point.cycles <= 0.0 || !std::isfinite(point.factor)) {
-            throw std::invalid_argument("spectrum cycles must be positive and factors finite");
+        if (point.cycles <= 0.0 || point.hours <= 0.0 || !std::isfinite(point.factor)) {
+            throw std::invalid_argument("spectrum cycles/hours must be positive and factors finite");
         }
     }
     return result;

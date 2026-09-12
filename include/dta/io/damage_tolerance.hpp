@@ -21,7 +21,8 @@ inline nlohmann::json output_to_json(const SimulationOutput& output) {
     nlohmann::json result{{"termination", output.termination}, {"history", nlohmann::json::array()}};
     for (const auto& state : output.history) {
         result["history"].push_back({
-            {"cycles", state.cycles}, {"crack_length", state.crack_length},
+            {"cycles", state.cycles}, {"hours", state.hours},
+            {"crack_length", state.crack_length},
             {"delta_k", state.delta_k}, {"max_k", state.max_k},
             {"growth_rate", std::isfinite(state.growth_rate)
                                  ? nlohmann::json(state.growth_rate)

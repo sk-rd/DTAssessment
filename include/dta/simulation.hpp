@@ -60,9 +60,22 @@ public:
             lives.push_back(result.history.back().cycles);
             bool detected = false;
             for (const auto& state : result.history) {
-                if (state.cycles >= ndi_.interval_cycles &&
-                    std::fmod(state.cycles, ndi_.interval_cycles) < 1e-9 &&
-                    state.crack_length >= ndi_.threshold &&
+                const bool threshold_cycles_ok =
+                    ndi_.threshold_cycles < 0.0 || state.cycles >= ndi_.threshold_cycles;
+                const bool threshold_hours_ok =
+                    ndi_.threshold_hours < 0.0 || state.hours >= ndi_.threshold_hours;
+                const bool interval_cycles_ok =
+                    ndi_.interval_cycles < 0.0 ||
+                    (state.cycles >= ndi_.interval_cycles &&
+                     std::fmod(state.cycles - std::max(0.0, ndi_.threshold_cycles),
+                               ndi_.interval_cycles) < 1e-9);
+                const bool interval_hours_ok =
+                    ndi_.interval_hours < 0.0 ||
+                    (state.hours >= ndi_.interval_hours &&
+                     std::fmod(state.hours - std::max(0.0, ndi_.threshold_hours),
+                               ndi_.interval_hours) < 1e-9);
+                if (threshold_cycles_ok && threshold_hours_ok &&
+                    interval_cycles_ok && interval_hours_ok &&
                     std::uniform_real_distribution<double>(0.0, 1.0)(generator) <=
                         ndi_.probability_of_detection(state.crack_length)) {
                     detected = true;

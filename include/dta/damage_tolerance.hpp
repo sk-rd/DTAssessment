@@ -26,9 +26,17 @@ inline SimulationInput input_from_json(const std::string& filename) {
     const auto& ndi = json.at("ndi");
     input.ndi.name_zh = ndi.at("method");
     input.ndi.name_en = ndi.at("method");
-    input.ndi.threshold = ndi.at("threshold");
-    input.ndi.interval_cycles = ndi.at("interval");
-    if (input.ndi.threshold <= 0.0 || input.ndi.interval_cycles <= 0.0) {
+    const auto read_optional = [](const nlohmann::json& object, const char* key) {
+        return object.contains(key) ? object.at(key).get<double>() : -1.0;
+    };
+    input.ndi.threshold_cycles = read_optional(ndi.at("threshold"), "flight_cycles");
+    input.ndi.threshold_hours = read_optional(ndi.at("threshold"), "flight_hours");
+    input.ndi.interval_cycles = read_optional(ndi.at("interval"), "flight_cycles");
+    input.ndi.interval_hours = read_optional(ndi.at("interval"), "flight_hours");
+    if (input.ndi.threshold_cycles < 0.0 && input.ndi.threshold_hours < 0.0) {
+        throw std::invalid_argument("NDI threshold requires flight cycles or flight hours");
+    }
+    if (input.ndi.interval_cycles < 0.0 && input.ndi.interval_hours < 0.0) {
         throw std::invalid_argument("NDI threshold and interval are required");
     }
     const auto spectrum_path =
@@ -59,6 +67,7 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
     const CrackLoad load{input.max_stress, input.min_stress};
     SimulationOutput output;
     double cycles = 0.0;
+    double hours = 0.0;
     double crack_length = input.initial_crack;
     std::size_t spectrum_index = 0;
     while (true) {
@@ -69,7 +78,7 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
         const double dk = delta_k(geometry, load, crack_length);
         const double mk = max_k(geometry, load, crack_length);
         const double rate = growth_rate(material, geometry, load, crack_length);
-        output.history.push_back({cycles, crack_length, dk, mk, rate});
+        output.history.push_back({cycles, hours, crack_length, dk, mk, rate});
         if (mk >= material.fracture_toughness || crack_length >= input.critical_crack) {
             output.termination = "fracture";
             break;
@@ -87,6 +96,7 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
             {input.cycles_per_step, spectrum_point.cycles, input.max_cycles - cycles});
         crack_length = std::min(input.critical_crack, crack_length + rate * step);
         cycles += step;
+        hours += spectrum_point.hours * (step / spectrum_point.cycles);
         ++spectrum_index;
     }
     return output;

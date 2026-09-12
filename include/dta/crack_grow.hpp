@@ -20,7 +20,7 @@ constexpr double pi = 3.14159265358979323846;
 struct CrackGeometry { std::string type{"center_crack"}; double width{}; };
 struct CrackLoad { double max_stress{}; double min_stress{}; };
 struct CrackState {
-    double cycles{}, crack_length{}, delta_k{}, max_k{}, growth_rate{};
+    double cycles{}, hours{}, crack_length{}, delta_k{}, max_k{}, growth_rate{};
 };
 struct SimulationInput {
     std::string material;
