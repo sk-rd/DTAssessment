@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 
 #include "dta/crack_grow.hpp"
-
+#include "dta/ndi.hpp"
 namespace dta {
 
 inline SimulationInput input_from_json(const std::string& filename) {
@@ -20,7 +20,18 @@ inline SimulationInput input_from_json(const std::string& filename) {
     SimulationInput input{json.value("geometry", "center_crack"), json.at("width"),
                           json.at("initial_crack"), json.at("critical_crack"),
                           json.at("max_stress"), json.at("min_stress"),
-                          json.at("cycles_per_step"), json.at("max_cycles")};
+                          json.at("cycles_per_step"), json.at("max_cycles"), {}};
+    const auto& ndi = json.at("ndi");
+    input.ndi.name_zh = ndi.at("name_zh");
+    input.ndi.name_en = ndi.at("name_en");
+    input.ndi.start_cycles = ndi.at("start_cycles");
+    input.ndi.interval_cycles = ndi.at("interval_cycles");
+    for (const auto& point : ndi.at("pod")) {
+        input.ndi.pod.push_back({point.at("crack_length"), point.at("probability")});
+    }
+    if (input.ndi.interval_cycles <= 0.0 || input.ndi.pod.empty()) {
+        throw std::invalid_argument("NDI interval and POD curve are required");
+    }
     if (input.geometry != "center_crack" && input.geometry != "edge_crack") {
         throw std::invalid_argument("geometry must be center_crack or edge_crack");
     }
@@ -57,12 +68,13 @@ inline SimulationOutput assess_damage_tolerance(const Material& material,
             break;
         }
 
-        inline SimulationOutput CrackGrow::run() const {
-            return assess_damage_tolerance(material_, input_);
-        }
         if (cycles >= input.max_cycles) {
             output.termination = "max_cycles";
             break;
+        }
+
+        inline SimulationOutput CrackGrow::run() const {
+            return assess_damage_tolerance(material_, input_);
         }
         const double step = std::min(input.cycles_per_step, input.max_cycles - cycles);
         crack_length = std::min(input.critical_crack, crack_length + rate * step);
