@@ -1,4 +1,7 @@
-# DTA
+# DTAssessment
+
+DTAssessment 是 **Damage Tolerance Assessment（损伤容限评估）** 的缩写。
+项目提供一个面向裂纹扩展和剩余寿命评估的 NASGRO/AFGROW 风格基础程序。
 
 一个使用 CMake 和 vcpkg 的基础 C++ 项目模板，参考 Boost 风格组织头文件，包含 `doc`、`include`、`src`、`test` 目录。
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(dta VERSION 0.1.0 LANGUAGES CXX)
+project(DTAssessment VERSION 0.1.0 LANGUAGES CXX)
 
 option(DTA_BUILD_DOCS "Build API documentation with Doxygen" OFF)
 option(DTA_BUILD_PYTHON_BINDINGS "Build Python bindings with Boost.Python" ON)
@@ -55,9 +55,10 @@ if(DTA_BUILD_DOCS)
     add_subdirectory(doc)
 endif()
 
-install(TARGETS dta
+install(TARGETS dta dta_simulator
     EXPORT dtaTargets
     INCLUDES DESTINATION include
 )
 
 install(DIRECTORY include/ DESTINATION include)
+install(PROGRAMS scripts/dta_simulator.py DESTINATION bin)
