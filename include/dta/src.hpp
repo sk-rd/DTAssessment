@@ -7,6 +7,7 @@
 #include "dta/io/ndi.hpp"
 #include "dta/io/simulation.hpp"
 #include "dta/io/spectrum.hpp"
+#include "dta/load.hpp"
 #include "dta/damage_tolerance.hpp"
 #include "dta/material.hpp"
 #include "dta/ndi.hpp"

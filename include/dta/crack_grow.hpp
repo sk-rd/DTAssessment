@@ -11,6 +11,7 @@
 
 #include "dta/material.hpp"
 #include "dta/ndi.hpp"
+#include "dta/load.hpp"
 #include "dta/spectrum.hpp"
 
 namespace dta {
@@ -18,7 +19,6 @@ namespace dta {
 constexpr double pi = 3.14159265358979323846;
 
 struct CrackGeometry { std::string type{"center_crack"}; double width{}; };
-struct CrackLoad { double max_stress{}; double min_stress{}; };
 struct CrackState {
     double cycles{}, hours{}, crack_length{}, delta_k{}, max_k{}, growth_rate{};
 };
