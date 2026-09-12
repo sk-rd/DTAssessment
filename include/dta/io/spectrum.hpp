@@ -28,7 +28,8 @@ inline Spectrum read_spectrum_file(const std::string& path) {
     }
     for (std::size_t i = 0; i < result.points.size(); ++i) {
         const auto& point = result.points[i];
-        if (point.time < 0.0 || !std::isfinite(point.factor) ||
+        if (!std::isfinite(point.time) || point.time < 0.0 ||
+            !std::isfinite(point.factor) ||
             (i > 0 && point.time <= result.points[i - 1].time)) {
             throw std::invalid_argument("spectrum times must be ordered and factors finite");
         }
