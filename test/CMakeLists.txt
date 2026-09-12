@@ -10,6 +10,8 @@ target_link_libraries(dta_tests
         dta
 )
 
+target_link_libraries(dta_tests PRIVATE nlohmann_json::nlohmann_json)
+
 add_test(NAME dta_tests COMMAND dta_tests)
 
 if(DTA_BUILD_PYTHON_BINDINGS)
@@ -21,3 +23,10 @@ if(DTA_BUILD_PYTHON_BINDINGS)
         ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:dta_python>"
     )
 endif()
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_test(
+    NAME dta_python_script_tests
+    COMMAND ${Python3_EXECUTABLE} -c
+        "import sys; sys.path.insert(0, '${CMAKE_CURRENT_SOURCE_DIR}/../scripts'); import dta_simulator"
+)

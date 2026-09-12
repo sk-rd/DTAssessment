@@ -1,0 +1,6 @@
+{
+  "c": 1.0e-10,
+  "m": 3.0,
+  "threshold_delta_k": 1.0,
+  "fracture_toughness": 80.0
+}

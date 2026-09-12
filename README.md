@@ -46,3 +46,15 @@ python3 -c "import dta; print(dta.add(2, 3))"
 ```
 
 如不需要 Python 接口，可以通过 `-DDTA_BUILD_PYTHON_BINDINGS=OFF` 关闭。
+
+## JSON 裂纹扩展模拟
+
+`dta_simulator` 和 `scripts/dta_simulator.py` 都读取三个 JSON 文件：
+
+```bash
+python3 scripts/dta_simulator.py data/input.json data/material.json output.json
+```
+
+输入和材料属性使用 SI 长度单位（m）、应力单位 MPa，输出包含每个计算步的裂纹长度、
+应力强度因子和裂纹扩展速率。该模型提供 NASGRO/AFGROW 风格的几何因子、阈值和断裂
+韧度判据，材料参数中的 `c` 和 `m` 定义 Paris 扩展关系。

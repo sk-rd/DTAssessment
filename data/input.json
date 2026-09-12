@@ -1,0 +1,10 @@
+{
+  "geometry": "center_crack",
+  "width": 1.0,
+  "initial_crack": 0.01,
+  "critical_crack": 0.2,
+  "max_stress": 100.0,
+  "min_stress": 0.0,
+  "cycles_per_step": 1000.0,
+  "max_cycles": 100000.0
+}

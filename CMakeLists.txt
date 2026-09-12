@@ -40,6 +40,10 @@ if(DTA_BUILD_PYTHON_BINDINGS)
     if(WIN32)
         set_target_properties(dta_python PROPERTIES SUFFIX ".pyd")
     endif()
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    add_executable(dta_simulator src/dta_simulator.cpp)
+    target_link_libraries(dta_simulator PRIVATE dta nlohmann_json::nlohmann_json)
 endif()
 
 include(CTest)
