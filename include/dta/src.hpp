@@ -6,4 +6,5 @@
 #include "dta/io/material.hpp"
 #include "dta/io/simulation.hpp"
 #include "dta/material.hpp"
+#include "dta/sample.hpp"
 #include "dta/simulation.hpp"

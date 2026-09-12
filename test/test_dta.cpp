@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE dta_tests
 #include <boost/test/unit_test.hpp>
 
-#include "dta/dta.hpp"
+#include "dta/src.hpp"
 BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
     const auto material = dta::material_from_json("../data/material.json");
     const auto input = dta::input_from_json("../data/input.json");
@@ -14,9 +14,9 @@ BOOST_AUTO_TEST_CASE(crack_growth_round_trip) {
 BOOST_AUTO_TEST_CASE(monte_carlo_returns_inspection_advice) {
     const auto material = dta::material_from_json("../data/material.json");
     const auto input = dta::input_from_json("../data/input.json");
-    dta::MonteCarloConfig config;
+    dta::SimulationConfig config;
     config.samples = 20;
-    const auto result = dta::run_monte_carlo(material, input, config);
+    const auto result = dta::Simulation(material, input, config).run();
     BOOST_TEST(result.samples == 20);
     BOOST_TEST(result.tenth_percentile_cycles >= 0.0);
     BOOST_TEST(!result.recommendation.empty());

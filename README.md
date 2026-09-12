@@ -81,3 +81,6 @@ dta_simulator data/input.json data/material.json simulation.json 1000
 `include/dta/simulation.hpp` 位于损伤容限评估的外层，使用随机应力和初始裂纹样本
 调用 `damage_tolerance.hpp`，以第 10 百分位寿命的一半作为建议检查间隔。当失效概率超过
 阈值时，输出立即检查并缩短检查间隔的建议。
+
+蒙特卡洛仿真按标准术语分为两个类：`Sample` 执行一次裂纹扩展仿真，
+`Simulation` 创建并执行多个独立的 `Sample`，再统计失效概率和寿命分位数。

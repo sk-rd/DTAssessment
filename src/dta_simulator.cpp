@@ -16,10 +16,10 @@ int main(int argc, char* argv[]) {
         if (argc == 4) {
             dta::write_output_file(argv[3], dta::assess_damage_tolerance(material, input));
         } else {
-            dta::MonteCarloConfig config;
+            dta::SimulationConfig config;
             config.samples = std::stoull(argv[4]);
             dta::write_simulation_file(argv[3],
-                dta::run_monte_carlo(material, input, config));
+                dta::Simulation(material, input, config).run());
         }
     } catch (const std::exception& error) {
         std::cerr << "dta_simulator: " << error.what() << '\n';

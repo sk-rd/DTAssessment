@@ -10,7 +10,7 @@
 
 namespace dta {
 
-inline nlohmann::json simulation_to_json(const MonteCarloResult& result) {
+inline nlohmann::json simulation_to_json(const SimulationResult& result) {
     return {
         {"samples", result.samples},
         {"failures", result.failures},
@@ -21,7 +21,7 @@ inline nlohmann::json simulation_to_json(const MonteCarloResult& result) {
         {"recommendation", result.recommendation}};
 }
 
-inline void write_simulation_file(const std::string& path, const MonteCarloResult& result) {
+inline void write_simulation_file(const std::string& path, const SimulationResult& result) {
     std::ofstream file(path);
     if (!file) throw std::runtime_error("cannot open simulation output file: " + path);
     file << simulation_to_json(result).dump(2) << '\n';
